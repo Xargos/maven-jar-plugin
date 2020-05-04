@@ -108,7 +108,7 @@ public abstract class AbstractJarMojo
      * Using this property will fail your build cause it has been removed from the plugin configuration. See the
      * <a href="https://maven.apache.org/plugins/maven-jar-plugin/">Major Version Upgrade to version 3.0.0</a> for the
      * plugin.
-     * 
+     *
      * @deprecated For version 3.0.0 this parameter is only defined here to break the build if you use it!
      */
     @Parameter( property = "jar.useDefaultManifestFile", defaultValue = "false" )
@@ -139,6 +139,13 @@ public abstract class AbstractJarMojo
      */
     @Parameter( defaultValue = "false" )
     private boolean skipIfEmpty;
+
+    /**
+     * Skip creating archives.
+     */
+    @Parameter( defaultValue = "false" )
+    private boolean skip;
+
 
     /**
      * Timestamp for reproducible output archive entries, either formatted as ISO 8601
@@ -291,6 +298,11 @@ public abstract class AbstractJarMojo
     public void execute()
         throws MojoExecutionException
     {
+        if ( skip )
+        {
+            getLog().info( "Skipping packaging of the " + getType() );
+        }
+
         if ( useDefaultManifestFile )
         {
             throw new MojoExecutionException( "You are using 'useDefaultManifestFile' which has been removed"
